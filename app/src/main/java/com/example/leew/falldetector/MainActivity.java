@@ -7,20 +7,19 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.TextureView;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
+    private final String boundary_key = getString(R.string.key_boundary);
+    private final String phoneNumber_key = getString(R.string.key_phone_number);
+    private final String notificationMethod_key = getString(R.string.key_notification_method);
+
     private TextView last_x_textView;
     private TextView last_y_textView;
     private TextView last_z_textView;
@@ -50,7 +49,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         initialSensor();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        warningBoundary = Integer.parseInt(sharedPreferences.getString("boundary", "20"));
+        warningBoundary = Integer.parseInt(sharedPreferences.getString(boundary_key, "20"));
     }
 
     public void initialUI() {
@@ -112,27 +111,19 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 Math.pow((gravity[1]-last_gravity[1]), 2) +
                 Math.pow((gravity[2]-last_gravity[2]), 2);
 
-        last_x_textView.setText("Last X = "+last_gravity[0]);
-        last_y_textView.setText("Last Y = "+last_gravity[1]);
-        last_z_textView.setText("Last Z = "+last_gravity[2]);
-        x_textView.setText("X = "+gravity[0]);
-        y_textView.setText("Y = "+gravity[1]);
-        z_textView.setText("Z = "+gravity[2]);
-        current_boundary_textView.setText("Current boundary = "+warningBoundary);
+        updateSensorView();
 
-        warningBoundary = Integer.parseInt(sharedPreferences.getString("boundary", "20"));
+        warningBoundary = Integer.parseInt(sharedPreferences.getString(boundary_key, "20"));
         if (!firstChange && changeAmount >= warningBoundary) {
-            phoneNumber = sharedPreferences.getString("default phone number", "");
-            notificationMethod = sharedPreferences.getString("notification type", "SMS");
+            phoneNumber = sharedPreferences.getString(phoneNumber_key, "");
+            notificationMethod = sharedPreferences.getString(notificationMethod_key, "SMS");
 
-            if (notificationMethod.equals("SMS")) {
+            if (notificationMethod.equals("SMS"))
                 sendSMS(phoneNumber);
-            } else if (notificationMethod.equals("phone")) {
+            else if (notificationMethod.equals("phone"))
                 makePhoneCall(phoneNumber);
-            }
         }
         firstChange = false;
-
     }
 
     @Override
@@ -147,14 +138,21 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         super.onPause();
     }
 
+    private void updateSensorView() {
+        last_x_textView.setText("Last X = "+last_gravity[0]);
+        last_y_textView.setText("Last Y = "+last_gravity[1]);
+        last_z_textView.setText("Last Z = "+last_gravity[2]);
+        x_textView.setText("X = "+gravity[0]);
+        y_textView.setText("Y = "+gravity[1]);
+        z_textView.setText("Z = "+gravity[2]);
+        current_boundary_textView.setText("Current boundary = "+warningBoundary);
+    }
+
     public void sendSMS(String phoneNumber) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"
-                + phoneNumber)));
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"+phoneNumber)));
     }
 
     public void makePhoneCall(String phoneNumber) {
-        startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
-                + phoneNumber)));
-
+        startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNumber)));
     }
 }

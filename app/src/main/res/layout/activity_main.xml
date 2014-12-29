@@ -54,5 +54,4 @@
         android:layout_below="@+id/z_value"
         android:textSize="20dp"/>
 
-
 </RelativeLayout>

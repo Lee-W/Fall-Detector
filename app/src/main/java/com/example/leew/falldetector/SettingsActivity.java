@@ -8,16 +8,15 @@ import android.preference.PreferenceManager;
 
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener {
-    public static final String SETTING_PREF = "settings";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_setting);
 
-        bindPreferenceSummaryToValue(findPreference("default phone number"));
-        bindPreferenceSummaryToValue(findPreference("notification type"));
-        bindPreferenceSummaryToValue(findPreference("boundary"));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.key_phone_number)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notification_method)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.key_boundary)));
     }
 
     private void bindPreferenceSummaryToValue(Preference preference) {
@@ -47,5 +46,4 @@ public class SettingsActivity extends PreferenceActivity
         }
         return true;
     }
-
 }

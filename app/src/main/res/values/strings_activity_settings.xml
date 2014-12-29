@@ -1,7 +1,14 @@
 <resources>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
+    <string name="key_phone_number">default phone number</string>
+    <string name="title_phone_number">Default phone number</string>
+
+    <string name="key_notification_method">notification method</string>
+    <string name="title_notification_method">Notification Method</string>
+
+    <string name="key_boundary">boundary</string>
+    <string name="title_boundary">Boundary</string>
 
     <string-array name="pref_default_notification_values">
         <item>phone</item>
