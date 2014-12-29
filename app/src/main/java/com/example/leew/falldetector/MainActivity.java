@@ -1,5 +1,8 @@
 package com.example.leew.falldetector;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
@@ -16,9 +19,9 @@ import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
-    private final String boundary_key = getString(R.string.key_boundary);
-    private final String phoneNumber_key = getString(R.string.key_phone_number);
-    private final String notificationMethod_key = getString(R.string.key_notification_method);
+    private String boundary_key;
+    private String phoneNumber_key;
+    private String notificationMethod_key;
 
     private TextView last_x_textView;
     private TextView last_y_textView;
@@ -26,6 +29,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private TextView x_textView;
     private TextView y_textView;
     private TextView z_textView;
+    private TextView current_change_amount_textView;
     private TextView current_boundary_textView;
 
     private Sensor sensor;
@@ -35,8 +39,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private double[] last_gravity = new double[3];
     private double[] gravity = new double[3];
     private boolean firstChange = true;
-    private double changeAmount;
-    private String phoneNumber;
+    private String phoneNumber ;
     private String notificationMethod;
     private int warningBoundary = 20;
 
@@ -45,11 +48,18 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        boundary_key = getString(R.string.key_boundary);
+        phoneNumber_key = getString(R.string.key_phone_number);
+        notificationMethod_key = getString(R.string.key_notification_method);
         initialUI();
         initialSensor();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         warningBoundary = Integer.parseInt(sharedPreferences.getString(boundary_key, "20"));
+        phoneNumber = sharedPreferences.getString(phoneNumber_key, "");
+
+        if (phoneNumber.equals(""))
+            showSetPhoneNumberWarning();
     }
 
     public void initialUI() {
@@ -67,7 +77,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_NORMAL);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         gravity[1] = event.values[1];
         gravity[2] = event.values[2];
 
-        changeAmount = Math.pow((gravity[0]-last_gravity[0]), 2) +
+        double changeAmount = Math.pow((gravity[0]-last_gravity[0]), 2) +
                 Math.pow((gravity[1]-last_gravity[1]), 2) +
                 Math.pow((gravity[2]-last_gravity[2]), 2);
 
@@ -154,5 +163,17 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public void makePhoneCall(String phoneNumber) {
         startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNumber)));
+    }
+
+    public void showSetPhoneNumberWarning() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(getString(R.string.set_phone_name_warning))
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(((Dialog) dialog).getContext(), SettingsActivity.class));
+                        dialog.cancel();
+                    }
+                }).show();
     }
 }
