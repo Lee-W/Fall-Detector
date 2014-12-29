@@ -1,0 +1,11 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <string-array name="pref_default_notification_values">
+        <item>phone</item>
+        <item>SMS</item>
+    </string-array>
+
+</resources>
