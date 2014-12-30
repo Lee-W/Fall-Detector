@@ -158,11 +158,19 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
     public void sendSMS(String phoneNumber) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"+phoneNumber)));
+        try {
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.putExtra("address", phoneNumber);
+            sendIntent.putExtra("sms_body", "I fell. Please help me.");
+            sendIntent.setType("vnd.android-dir/mms-sms");
+            startActivity(sendIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void makePhoneCall(String phoneNumber) {
-        startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNumber)));
+        startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNumber)).putExtra("sms_body", "default content"));
     }
 
     public void showSetPhoneNumberWarning() {
