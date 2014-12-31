@@ -17,8 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
+    private DecimalFormat df = new DecimalFormat("#.###");
     private String boundary_key;
     private String phoneNumber_key;
     private String notificationMethod_key;
@@ -156,7 +159,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         x_textView.setText("X = "+gravity[0]);
         y_textView.setText("Y = "+gravity[1]);
         z_textView.setText("Z = "+gravity[2]);
-        current_change_amount_textView.setText("Current amount = "+changeAmount);
+        current_change_amount_textView.setText("Current change amount = "+df.format(changeAmount));
         current_boundary_textView.setText("Current boundary = "+warningBoundary);
     }
 
