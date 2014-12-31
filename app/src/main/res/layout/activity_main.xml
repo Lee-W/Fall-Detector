@@ -48,10 +48,17 @@
         android:textSize="20dp"/>
 
     <TextView
-        android:id="@+id/current_boundary"
+        android:id="@+id/current_change_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/z_value"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/current_boundary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/current_change_amount"
         android:textSize="20dp"/>
 
 </RelativeLayout>

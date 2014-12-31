@@ -40,8 +40,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private double[] gravity = new double[3];
     private boolean firstChange = true;
     private String phoneNumber ;
-    private String notificationMethod;
     private int warningBoundary = 20;
+    private double changeAmount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         x_textView = (TextView)findViewById(R.id.x_value);
         y_textView = (TextView)findViewById(R.id.y_value);
         z_textView = (TextView)findViewById(R.id.z_value);
+        current_change_amount_textView = (TextView)findViewById(R.id.current_change_amount);
         current_boundary_textView = (TextView)findViewById(R.id.current_boundary);
     }
 
@@ -116,12 +117,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         gravity[1] = event.values[1];
         gravity[2] = event.values[2];
 
-        double changeAmount = Math.pow((gravity[0]-last_gravity[0]), 2) +
+        changeAmount = Math.pow((gravity[0]-last_gravity[0]), 2) +
                 Math.pow((gravity[1]-last_gravity[1]), 2) +
                 Math.pow((gravity[2]-last_gravity[2]), 2);
 
         updateSensorView();
 
+        String notificationMethod;
         warningBoundary = Integer.parseInt(sharedPreferences.getString(boundary_key, "20"));
         if (!firstChange && changeAmount >= warningBoundary) {
             phoneNumber = sharedPreferences.getString(phoneNumber_key, "");
@@ -154,6 +156,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         x_textView.setText("X = "+gravity[0]);
         y_textView.setText("Y = "+gravity[1]);
         z_textView.setText("Z = "+gravity[2]);
+        current_change_amount_textView.setText("Current amount = "+changeAmount);
         current_boundary_textView.setText("Current boundary = "+warningBoundary);
     }
 
